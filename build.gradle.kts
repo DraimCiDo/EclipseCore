@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "1.9.23"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 group = "me.draimgoose"
@@ -17,4 +18,15 @@ dependencies {
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions.jvmTarget = "17"
+}
+
+tasks {
+    shadowJar {
+        archiveClassifier.set("")
+        configurations = listOf(project.configurations.runtimeClasspath.get())
+    }
+
+    build {
+        dependsOn(shadowJar)
+    }
 }
