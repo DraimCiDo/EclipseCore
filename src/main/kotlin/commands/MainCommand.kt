@@ -22,7 +22,7 @@ class MainCommand(private val plugin: Main) : CommandExecutor {
     }
 
     private fun openMainGui(player: Player) {
-        val gui: Inventory = Bukkit.createInventory(null, 9, "Event Manager")
+        val gui: Inventory = Bukkit.createInventory(null, 27, "${ChatColor.DARK_BLUE}Event Manager")
 
         val parkourButton = ItemStack(Material.FEATHER)
         val parkourMeta: ItemMeta? = parkourButton.itemMeta
@@ -34,8 +34,17 @@ class MainCommand(private val plugin: Main) : CommandExecutor {
         boatRaceMeta?.setDisplayName("${ChatColor.BLUE}Ивент гонки на лодках")
         boatRaceButton.itemMeta = boatRaceMeta
 
-        gui.setItem(3, parkourButton)
-        gui.setItem(5, boatRaceButton)
+        val glassPane = ItemStack(Material.BLACK_STAINED_GLASS_PANE)
+        val glassPaneMeta: ItemMeta? = glassPane.itemMeta
+        glassPaneMeta?.setDisplayName(" ")
+        glassPane.itemMeta = glassPaneMeta
+
+        for (i in 0 until gui.size) {
+            gui.setItem(i, glassPane)
+        }
+
+        gui.setItem(11, parkourButton)
+        gui.setItem(15, boatRaceButton)
 
         player.openInventory(gui)
     }

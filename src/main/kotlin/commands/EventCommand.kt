@@ -22,14 +22,23 @@ class EventCommand(private val plugin: Main) : CommandExecutor {
     }
 
     private fun openEventGui(player: Player) {
-        val gui: Inventory = Bukkit.createInventory(null, 9, "Current Event")
+        val gui: Inventory = Bukkit.createInventory(null, 27, "${ChatColor.GOLD}Current Event")
 
         val eventItem = ItemStack(Material.PAPER)
         val eventMeta: ItemMeta? = eventItem.itemMeta
         eventMeta?.setDisplayName("${ChatColor.YELLOW}Текущий ивент: ${plugin.currentEvent ?: "Нет активных ивентов"}")
         eventItem.itemMeta = eventMeta
 
-        gui.setItem(4, eventItem)
+        val glassPane = ItemStack(Material.BLACK_STAINED_GLASS_PANE)
+        val glassPaneMeta: ItemMeta? = glassPane.itemMeta
+        glassPaneMeta?.setDisplayName(" ")
+        glassPane.itemMeta = glassPaneMeta
+
+        for (i in 0 until gui.size) {
+            gui.setItem(i, glassPane)
+        }
+
+        gui.setItem(13, eventItem)
 
         player.openInventory(gui)
     }
