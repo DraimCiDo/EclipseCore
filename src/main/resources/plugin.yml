@@ -8,3 +8,6 @@ commands:
   test:
     description: Open test GUI
     usage: /test
+  event:
+    description: Shows the current active event
+    usage: /event
