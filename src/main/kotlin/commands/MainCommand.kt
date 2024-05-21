@@ -22,21 +22,21 @@ class MainCommand(private val plugin: Main) : CommandExecutor {
     }
 
     private fun openMainGui(player: Player) {
-        val gui: Inventory = Bukkit.createInventory(null, 27, "${ChatColor.DARK_BLUE}Event Manager")
+        val gui: Inventory = Bukkit.createInventory(null, 27, ChatColor.translateAlternateColorCodes('&', plugin.getConfigString("gui.event_manager_title")))
 
-        val parkourButton = ItemStack(Material.FEATHER)
+        val parkourButton = ItemStack(Material.valueOf(plugin.getConfigString("gui.parkour_event_item.material")))
         val parkourMeta: ItemMeta? = parkourButton.itemMeta
-        parkourMeta?.setDisplayName("${ChatColor.GREEN}Ивент паркур")
+        parkourMeta?.setDisplayName(ChatColor.translateAlternateColorCodes('&', plugin.getConfigString("gui.parkour_event_item.display_name")))
         parkourButton.itemMeta = parkourMeta
 
-        val boatRaceButton = ItemStack(Material.OAK_BOAT)
+        val boatRaceButton = ItemStack(Material.valueOf(plugin.getConfigString("gui.boat_race_event_item.material")))
         val boatRaceMeta: ItemMeta? = boatRaceButton.itemMeta
-        boatRaceMeta?.setDisplayName("${ChatColor.BLUE}Ивент гонки на лодках")
+        boatRaceMeta?.setDisplayName(ChatColor.translateAlternateColorCodes('&', plugin.getConfigString("gui.boat_race_event_item.display_name")))
         boatRaceButton.itemMeta = boatRaceMeta
 
-        val glassPane = ItemStack(Material.BLACK_STAINED_GLASS_PANE)
+        val glassPane = ItemStack(Material.valueOf(plugin.getConfigString("gui.glass_pane_item.material")))
         val glassPaneMeta: ItemMeta? = glassPane.itemMeta
-        glassPaneMeta?.setDisplayName(" ")
+        glassPaneMeta?.setDisplayName(ChatColor.translateAlternateColorCodes('&', plugin.getConfigString("gui.glass_pane_item.display_name")))
         glassPane.itemMeta = glassPaneMeta
 
         for (i in 0 until gui.size) {

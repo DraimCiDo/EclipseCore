@@ -20,35 +20,39 @@ class GuiEventListener(private val plugin: Main) : Listener {
         val player = event.whoClicked as Player
 
         when (event.view.title) {
-            "${ChatColor.DARK_BLUE}Event Manager" -> {
+            ChatColor.translateAlternateColorCodes('&',
+                plugin.getConfigString("gui.event_manager_title")) -> {
                 event.isCancelled = true
                 when (event.currentItem?.type) {
                     Material.FEATHER -> {
-                        selectedEventType = "Ивент паркур"
+                        selectedEventType = plugin.getConfigString("gui.parkour_event_item.display_name")
                         openMapSelectionGui(player)
                     }
                     Material.OAK_BOAT -> {
-                        selectedEventType = "Ивент гонки на лодках"
+                        selectedEventType = plugin.getConfigString("gui.boat_race_event_item.display_name")
                         openMapSelectionGui(player)
                     }
                     else -> return
                 }
             }
-            "${ChatColor.GOLD}Current Event" -> {
+            ChatColor.translateAlternateColorCodes('&',
+                plugin.getConfigString("gui.current_event_title")) -> {
                 event.isCancelled = true
             }
-            "${ChatColor.DARK_GREEN}Выбор карты" -> {
+            ChatColor.translateAlternateColorCodes('&',
+                plugin.getConfigString("gui.map_selection_title")) -> {
                 event.isCancelled = true
                 val selectedMap = event.currentItem?.itemMeta?.displayName
                 if (selectedMap != null) {
                     openConfirmationGui(player, selectedMap)
                 }
             }
-            "${ChatColor.RED}Подтверждение" -> {
+            ChatColor.translateAlternateColorCodes('&',
+                plugin.getConfigString("gui.confirmation_title")) -> {
                 event.isCancelled = true
                 when (event.currentItem?.type) {
-                    Material.LIME_WOOL -> startEvent(player)
-                    Material.RED_WOOL -> player.closeInventory()
+                    Material.valueOf(plugin.getConfigString("gui.confirm_item.material")) -> startEvent(player)
+                    Material.valueOf(plugin.getConfigString("gui.cancel_item.material")) -> player.closeInventory()
                     else -> return
                 }
             }
@@ -56,49 +60,53 @@ class GuiEventListener(private val plugin: Main) : Listener {
     }
 
     private fun openMapSelectionGui(player: Player) {
-        val gui: Inventory = plugin.server.createInventory(null, 27, "${ChatColor.DARK_GREEN}Выбор карты")
+        val gui: Inventory = plugin.server.createInventory(null, 27,
+            ChatColor.translateAlternateColorCodes('&',
+                plugin.getConfigString("gui.map_selection_title")))
 
-        val map1 = ItemStack(Material.MAP)
-        val map1Meta: ItemMeta? = map1.itemMeta
-        map1Meta?.setDisplayName("${ChatColor.RED}Карта 1")
-        map1.itemMeta = map1Meta
-
-        val map2 = ItemStack(Material.MAP)
-        val map2Meta: ItemMeta? = map2.itemMeta
-        map2Meta?.setDisplayName("${ChatColor.RED}Карта 2")
-        map2.itemMeta = map2Meta
-
-        val glassPane = ItemStack(Material.BLACK_STAINED_GLASS_PANE)
+        val glassPane = ItemStack(Material.valueOf(plugin.getConfigString("gui.glass_pane_item.material")))
         val glassPaneMeta: ItemMeta? = glassPane.itemMeta
-        glassPaneMeta?.setDisplayName(" ")
+        glassPaneMeta?.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+            plugin.getConfigString("gui.glass_pane_item.display_name")))
         glassPane.itemMeta = glassPaneMeta
 
         for (i in 0 until gui.size) {
             gui.setItem(i, glassPane)
         }
 
-        gui.setItem(11, map1)
-        gui.setItem(15, map2)
+        val mapItems = plugin.getConfigStringList("gui.map_items")
+        for ((index, mapItem) in mapItems.withIndex()) {
+            val map = ItemStack(Material.valueOf(mapItem["material"]!!))
+            val mapMeta: ItemMeta? = map.itemMeta
+            mapMeta?.setDisplayName(ChatColor.translateAlternateColorCodes('&', mapItem["display_name"]!!))
+            map.itemMeta = mapMeta
+            gui.setItem(11 + index * 2, map)
+        }
 
         player.openInventory(gui)
     }
 
     private fun openConfirmationGui(player: Player, selectedMap: String) {
-        val gui: Inventory = plugin.server.createInventory(null, 27, "${ChatColor.RED}Подтверждение")
+        val gui: Inventory = plugin.server.createInventory(null, 27,
+            ChatColor.translateAlternateColorCodes('&',
+                plugin.getConfigString("gui.confirmation_title")))
 
-        val confirm = ItemStack(Material.LIME_WOOL)
+        val confirm = ItemStack(Material.valueOf(plugin.getConfigString("gui.confirm_item.material")))
         val confirmMeta: ItemMeta? = confirm.itemMeta
-        confirmMeta?.setDisplayName("${ChatColor.GREEN}Подтвердить")
+        confirmMeta?.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+            plugin.getConfigString("gui.confirm_item.display_name")))
         confirm.itemMeta = confirmMeta
 
-        val cancel = ItemStack(Material.RED_WOOL)
+        val cancel = ItemStack(Material.valueOf(plugin.getConfigString("gui.cancel_item.material")))
         val cancelMeta: ItemMeta? = cancel.itemMeta
-        cancelMeta?.setDisplayName("${ChatColor.RED}Отмена")
+        cancelMeta?.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+            plugin.getConfigString("gui.cancel_item.display_name")))
         cancel.itemMeta = cancelMeta
 
-        val glassPane = ItemStack(Material.BLACK_STAINED_GLASS_PANE)
+        val glassPane = ItemStack(Material.valueOf(plugin.getConfigString("gui.glass_pane_item.material")))
         val glassPaneMeta: ItemMeta? = glassPane.itemMeta
-        glassPaneMeta?.setDisplayName(" ")
+        glassPaneMeta?.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+            plugin.getConfigString("gui.glass_pane_item.display_name")))
         glassPane.itemMeta = glassPaneMeta
 
         for (i in 0 until gui.size) {
@@ -115,6 +123,7 @@ class GuiEventListener(private val plugin: Main) : Listener {
         val eventTitle = selectedEventType ?: "Ивент"
         plugin.currentEvent = eventTitle
         player.closeInventory()
-        plugin.server.broadcastMessage("${ChatColor.GREEN}${ChatColor.BOLD}Начинается $eventTitle!")
+        plugin.server.broadcastMessage(ChatColor.translateAlternateColorCodes('&',
+            plugin.getConfigString("chat.event_start").replace("%event%", eventTitle)))
     }
 }

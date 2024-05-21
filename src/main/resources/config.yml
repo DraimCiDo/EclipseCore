@@ -1,0 +1,28 @@
+gui:
+  event_manager_title: "&1Event Manager"
+  current_event_title: "&6Current Event"
+  map_selection_title: "&2Map Selection"
+  confirmation_title: "&4Confirmation"
+  parkour_event_item:
+    material: "FEATHER"
+    display_name: "&aParkour Event"
+  boat_race_event_item:
+    material: "OAK_BOAT"
+    display_name: "&9Boat Race Event"
+  confirm_item:
+    material: "LIME_WOOL"
+    display_name: "&aConfirm"
+  cancel_item:
+    material: "RED_WOOL"
+    display_name: "&cCancel"
+  map_items:
+    - material: "MAP"
+      display_name: "&cMap 1"
+    - material: "MAP"
+      display_name: "&cMap 2"
+  glass_pane_item:
+    material: "BLACK_STAINED_GLASS_PANE"
+    display_name: " "
+
+chat:
+  event_start: "&a&lThe event %event%  is starting!"
